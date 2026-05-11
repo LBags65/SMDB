@@ -27,16 +27,17 @@ library(shinythemes)
 library(bs4Dash)
 ## Setup in Database ------------------------------------------------------
 
+#load in 1. Metadata here
 SMDB_Metadata <- read_excel("C:/Users/lbagd/OneDrive - University of Toronto/Soil Metabolome Database/Database Documents/Soil Metabolome Database.xlsx", 
                                        sheet = "1. Metadata")
 
 
 
-#Load in metabolites
+#Load in 2. Location Data here
 SMDB_Locations <- read_excel("C:/Users/lbagd/OneDrive - University of Toronto/Soil Metabolome Database/Database Documents/Soil Metabolome Database.xlsx", 
   sheet = "2. Location Data")
 
-#Load in Locations
+#Load in 3. Metabolites here
 Soil_Metabolome_Database <- read_excel("C:/Users/lbagd/OneDrive - University of Toronto/Soil Metabolome Database/Database Documents/Soil Metabolome Database.xlsx", 
                                             sheet = "3. Metabolites", col_types = c("text", 
                                                                                            "text", "numeric", "numeric", "numeric", 
@@ -70,10 +71,10 @@ Soil_Metabolome_Database$Column <- as.factor(Soil_Metabolome_Database$Column)
 Soil_Metabolome_Database$Ionization_Source <- as.factor(Soil_Metabolome_Database$Ionization_Source) 
 Soil_Metabolome_Database$Ion_Mode <- as.factor(Soil_Metabolome_Database$Ion_Mode) 
 
-#Check factors here
+#Check factors here--can change to which column you want to check
 table(Soil_Metabolome_Database$Identification_Method)
 
-#Clean up element counts
+#Clean up element counts by replacing all 0s with NA
 Element_cols <- c("C", "H", "As", "B", "Br","Cl", "F", "I", "N", "O","P", "S", "Si")
 Soil_Metabolome_Database[Element_cols][Soil_Metabolome_Database[Element_cols] == 0] <- NA
 
@@ -82,7 +83,6 @@ Soil_Metabolome_Database[Element_cols][Soil_Metabolome_Database[Element_cols] ==
 #Superclass 
 {
 table(Soil_Metabolome_Database$Superclass)
-
 Soil_Metabolome_Database$Superclass <- as.factor(Soil_Metabolome_Database$Superclass) #Set as factor
 
 #set superclass colors
@@ -117,20 +117,20 @@ table(Soil_Metabolome_Database$Metabolite_Lipid) #total metabolites and lipids
 unique_metabolites <- filter(Soil_Metabolome_Database, Metabolite_Lipid == "Metabolite") %>%
   distinct(INCHIKEY, .keep_all = TRUE) #unique metabolites
 
-table(unique_metabolites$Superclass)
+table(unique_metabolites$Superclass) #Superclass of unique metabolites
 
 ## Table and Graph of Superclass ------------------------------------------------------
 
 #58 studies reported metabolites
 Metabolite_DOIs <- Soil_Metabolome_Database %>%
-  filter(Metabolite_Lipid == "Metabolite") %>%
-  filter(!is.na(Superclass)) %>%
-  distinct(DOI)
+  filter(Metabolite_Lipid == "Metabolite") %>% #metabolite entries only
+  filter(!is.na(Superclass)) %>% #remove NA superclass 
+  distinct(DOI) #grab distinct DOIs
 
 #13 studies reported lipids
-Lipid_DOIs <- Soil_Metabolome_Database %>%
-  filter(Metabolite_Lipid == "Lipid") %>%
-  distinct(DOI)
+Lipid_DOIs <- Soil_Metabolome_Database %>% 
+  filter(Metabolite_Lipid == "Lipid") %>% #lipid entries only
+  distinct(DOI) #grab distinct DOIs
 
 #Distinct metabolite superclass counts
 Superclass_Distinct <- Soil_Metabolome_Database %>%
@@ -1280,7 +1280,6 @@ ggplot(Formulas_Solvent_uncounted, aes(x = Solvent_Matrix, y = O_C, fill = Solve
 
 
 
-# Metadata ----------------------------------------------------------------
 ## Publication Year --------------------------------------------------------
 Pub_dates <- SMDB_Metadata[c("Year_Published")] %>%
   filter(!is.na(Year_Published)) %>%
@@ -1399,7 +1398,7 @@ Confidences <- Soil_Metabolome_Database %>%
 
 
 
-##Studies Included ------------------------------------------------------
+## Studies Included ------------------------------------------------------
 Included <- SMDB_Metadata %>%
   select(DOI,Included, Clear_Annotation, Full_Metabolite_List, Other_Issues)
 
@@ -1542,7 +1541,7 @@ ggplot(Soil_Types2, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = Sit
     plot.margin = margin(10, 100, 10, 10),
     legend.position = "none"
   )
-#Ion Mode----
+## Ion Mode----
 
 Ion_colors <- c(
   "GC/MS_+" = "grey100",
@@ -1701,7 +1700,7 @@ ggplot(mz_binned, aes(x = mz_center, y = n)) +
   )
 
 
-#Locations----
+## Locations----
 
 
 leaflet(SMDB_Locations) %>%
@@ -1793,11 +1792,7 @@ Confidences <- Soil_Metabolome_Database %>%
   summarise(Count = n(), .groups = "drop") %>%
   arrange(desc(Count))
 
-#MWs-----
-library(httr)
-library(jsonlite)
-library(webchem)
-
+## MWs-----
 get_mw_safe <- function(inchikey){
   
   if(is.na(inchikey) || inchikey == "") return(NA_real_)
@@ -1875,7 +1870,7 @@ ggplot(MW_binned, aes(x = mz_bin, y = n)) +
   ) +
   theme_bw()
 
-#Extraction things----
+## Extraction things----
 coord_polar(theta = "y", clip = "off")
 
 #check extraction solvents
@@ -2085,7 +2080,7 @@ ggplot(pie_data_Column, aes(x = "", y = prop, fill = Superclass)) +
 
 unique(Soil_Metabolome_Database$`Source DOI`)
 
-#inchis----
+## Unique across studies----
 unique_doi <- filter(Soil_Metabolome_Database, Metabolite_Lipid == "Metabolite") %>%
   distinct(DOI)
 
@@ -2542,7 +2537,7 @@ library(dplyr)
 library(DT)
 library(stringr)
 
-# ================= DATA =================
+# ================= DATA 
 df <- Website_DB
 dt <- as.data.table(df)
 
@@ -2566,7 +2561,7 @@ display_cols <- c(
   "Soil Description","Site Description", "InChIKey","DOI"
 )
 
-# ================= UI =================
+# ================= UI 
 ui <- fluidPage(
   
   theme = shinytheme("flatly"),
@@ -2675,10 +2670,10 @@ ui <- fluidPage(
     "))
   ),
   
-  # ================= HEADER (ONLY CHANGE IS HERE) =================
+  # ================= HEADER 
   tags$div(
     style = "
-      background: rgba(205, 133, 64, 0.5);  /* ← UPDATED COLOR ONLY */
+      background: rgba(205, 133, 64, 0.5);
       color: #1a1a1a;
       padding: 14px;
       text-align: center;
@@ -2687,7 +2682,7 @@ ui <- fluidPage(
     tags$div(class = "app-title", "Soil Metabolome Database")
   ),
   
-  # ================= SEARCH BAR (UNCHANGED) =================
+  # ================= SEARCH BAR 
   fluidRow(
     class = "search-wrap",
     
@@ -2752,7 +2747,7 @@ ui <- fluidPage(
     )
   ),
   
-  # ================= MAIN =================
+  # ================= MAIN 
   fluidRow(
     
     column(
@@ -2770,7 +2765,7 @@ ui <- fluidPage(
   )
 )
 
-# ================= SERVER =================
+# ================= SERVER 
 server <- function(input, output, session) {
   
   filtered <- eventReactive(input$search, {
@@ -2859,5 +2854,5 @@ server <- function(input, output, session) {
   )
 }
 
-# ================= RUN =================
+# ================= RUN 
 shinyApp(ui, server)
