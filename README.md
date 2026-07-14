@@ -7,7 +7,7 @@ This project contains the Soil Metabolome Database and the R code used to genera
 
 <ins>UI_Data</ins>: This file contains the SMDB data in the combined metadata and metabolite data format used to make the UI
 
-<ins>App:</ins> Contains the R code used to generate the UI
+[app.R](app.R) Contains the R code used to generate the UI
 
 ## Accessing the SMDB
 
