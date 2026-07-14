@@ -1,13 +1,15 @@
 # SMDB
 
-This project contains the Soil Metabolome Database and the R code used to generate the User Interface and data analysis for the publication
+This project contains the Soil Metabolome Database and the R code used to generate the User Interface and data analysis for the publication.
 
 ## Structure
 [README.md](README.md): Readme file with instructions on how to generate the UI for the SMDB
 
-<ins>UI_Data</ins>: This file contains the SMDB data in the combined metadata and metabolite data format used to make the UI
+[UI_Data.csv](UI_Data.csv): This file contains the SMDB data in the combined metadata and metabolite data format used to make the UI
 
 [app.R](app.R) Contains the R code used to generate the UI
+
+[SMDB Stats.R](SMDB Stats.R): Contains the R code used to analyze the SMDB and generate figures for the publication
 
 ## Accessing the SMDB
 
@@ -18,7 +20,7 @@ There are two ways to access the SMDB:
 
 ## Running the SMDB UI
 
-The SMDB UI was made through a Shiny App in R 4.4.2. The following sections describe how to setup the Shiny App locally in RStudio. All code is available in ()
+The SMDB UI was made through a Shiny App in R 4.4.2. The following sections describe how to setup the Shiny App locally in RStudio. All code is available in [app.R](app.R)
 
 ### 1. Load in libraries
 ````r
@@ -38,20 +40,16 @@ library(httpuv)
 
 ### 2. Load in the data
 
-The data used to generate the UI is found in (). You will need to download this file and load it into R with the following code. 
-After loading i
+The data used to generate the UI is found in [UI_Data.csv](UI_Data.csv). You will need to download this file and load it into R with the following code. 
 
 ````r
 #load in data
 Website_DB <- read.csv("UI_Data") #Here you need to replace "UI_Data" with the file path where you downloaded the UI_Data
 ````
 
-
-
-
 ### 3. Setup UI and Server in Shiny App
 
-Run the following code to prepare the data for the UI. This first renames a few columns to improve readability, cleans InChIKey codes, and sets up the PubChem API to generate structures in the output. Then it generates the UI and server for the Shiny App
+Run the following code to prepare the data for the UI. This first renames a few columns to improve readability, cleans InChIKey codes, and sets up the PubChem API to generate structures in the output. Then it generates the UI and server for the Shiny App.
 
 ````r
 #renaming some columns for readability and setting as factor
