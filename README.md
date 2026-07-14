@@ -399,6 +399,7 @@ shinyApp(ui = ui, server = server)
 This will generate a UI seen below:
 <img width="3456" height="2304" alt="SMDB Fig 5" src="https://github.com/user-attachments/assets/4fbc41eb-550f-43a8-9266-ed1a6323cce8" />
 The UI contains the following sections:
+
 A) Search bar for metabolite or lipid entries. Metabolites are searched by InChIKey through a single or batch entry. Lipids are searched by class.
 
 B) Download results as a .csv file. 
