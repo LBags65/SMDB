@@ -9,7 +9,7 @@ This project contains the Soil Metabolome Database and the R code used to genera
 
 [app.R](app.R) Contains the R code used to generate the UI
 
-[SMDB Stats.R](SMDB Stats.R): Contains the R code used to analyze the SMDB and generate figures for the publication
+[SMDB Stats.R](SMDBStats.R): Contains the R code used to analyze the SMDB and generate figures for the publication
 
 ## Accessing the SMDB
 
