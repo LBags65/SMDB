@@ -15,7 +15,7 @@ library(httpuv)
 ## Setup in Database ------------------------------------------------------
 
 #load in data
-Website_DB <- read.csv("UI_Data")
+Website_DB <- read.csv("UI_Data", header=TRUE)
 
 #renaming some columns for readability and setting as factor
 Website_DB$Column <- factor(Website_DB$Column,
