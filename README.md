@@ -44,7 +44,7 @@ The data used to generate the UI is found in [UI_Data.csv](UI_Data.csv). You wil
 
 ````r
 #load in data
-Website_DB <- read.csv("UI_Data") #Here you need to replace "UI_Data" with the file path where you downloaded the UI_Data
+Website_DB <- read.csv("UI_Data", header =TRUE) #Here you need to replace "UI_Data" with the file path where you downloaded the UI_Data
 ````
 
 ### 3. Setup UI and Server in Shiny App
